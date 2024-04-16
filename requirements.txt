@@ -5,7 +5,7 @@ django-netfields==1.2.2
 django-pglocks==1.0.2
 djangorestframework==3.11.2
 djangorestframework-csv==1.4.1
-gunicorn==19.5.0
+gunicorn==22.0.0
 ipaddress==1.0.22
 netaddr==0.7.19
 psycopg2==2.8.4
