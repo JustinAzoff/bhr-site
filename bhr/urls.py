@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, permission_required
-from django.conf.urls import include, url
+from django.urls import include, re_path
 
 from rest_framework import routers
 from bhr import views
@@ -18,49 +18,49 @@ router.register(r'pending_removal_blocks', views.PendingRemovalBlockViewset, 'pe
 
 urlpatterns = [
     # Examples:
-    # url(r'^$', 'testapp.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-    url(r'^api/', include(router.urls)),
-    url(r'^api/block$', views.block.as_view()),
-    url(r'^api/unblock_now$', views.unblock_now.as_view()),
-    url(r'^api/stats$', views.stats),
-    url(r'^api/metrics$', views.metrics),
-    url(r'^api/source_stats$', views.source_stats),
+    # re_path(r'^$', 'testapp.views.home', name='home'),
+    # re_path(r'^blog/', include('blog.urls')),
+    re_path(r'^api/', include(router.urls)),
+    re_path(r'^api/block$', views.block.as_view()),
+    re_path(r'^api/unblock_now$', views.unblock_now.as_view()),
+    re_path(r'^api/stats$', views.stats),
+    re_path(r'^api/metrics$', views.metrics),
+    re_path(r'^api/source_stats$', views.source_stats),
 
-    url(r'^api/mblock$', views.mblock.as_view()),
-    url(r'^api/set_blocked_multi/(?P<ident>.+)$', views.set_blocked_multi.as_view()),
-    url(r'^api/set_unblocked_multi$', views.set_unblocked_multi.as_view()),
+    re_path(r'^api/mblock$', views.mblock.as_view()),
+    re_path(r'^api/set_blocked_multi/(?P<ident>.+)$', views.set_blocked_multi.as_view()),
+    re_path(r'^api/set_unblocked_multi$', views.set_unblocked_multi.as_view()),
 
-    url(r'^api/queue/(?P<ident>.+)', views.BlockQueue.as_view()),
-    url(r'^api/unblock_queue/(?P<ident>.+)', views.UnBlockQueue.as_view()),
-    url(r'^api/query/(?P<cidr>.+)', views.BlockHistory.as_view()),
+    re_path(r'^api/queue/(?P<ident>.+)', views.BlockQueue.as_view()),
+    re_path(r'^api/unblock_queue/(?P<ident>.+)', views.UnBlockQueue.as_view()),
+    re_path(r'^api/query/(?P<cidr>.+)', views.BlockHistory.as_view()),
 
-    url('^$', browser_views.IndexView.as_view(), name="home"),
-    url('^add$', permission_required('bhr.add_block', raise_exception=True)(
+    re_path('^$', browser_views.IndexView.as_view(), name="home"),
+    re_path('^add$', permission_required('bhr.add_block', raise_exception=True)(
         browser_views.AddView.as_view()), name="add"),
-    url('^query$', login_required(browser_views.QueryView.as_view()), name="query"),
-    url('^unblock$', permission_required('bhr.change_block', raise_exception=True)(
+    re_path('^query$', login_required(browser_views.QueryView.as_view()), name="query"),
+    re_path('^unblock$', permission_required('bhr.change_block', raise_exception=True)(
         browser_views.UnblockView.as_view()), name="unblock"),
-    url('^do_unblock$', permission_required('bhr.change_block', raise_exception=True)(
+    re_path('^do_unblock$', permission_required('bhr.change_block', raise_exception=True)(
         browser_views.DoUnblockView.as_view()), name="do_unblock"),
-    url(r'^stats$', browser_views.StatsView.as_view(), name="stats"),
-    url(r'^list$', login_required(browser_views.ListView.as_view()), name="list"),
-    url(r'^list/source/(?P<source>.+)$', login_required(browser_views.SourceListView.as_view()), name="source-list"),
-    url(r'^list.csv', views.bhlist.as_view(), name='csv'),
+    re_path(r'^stats$', browser_views.StatsView.as_view(), name="stats"),
+    re_path(r'^list$', login_required(browser_views.ListView.as_view()), name="list"),
+    re_path(r'^list/source/(?P<source>.+)$', login_required(browser_views.SourceListView.as_view()), name="source-list"),
+    re_path(r'^list.csv', views.bhlist.as_view(), name='csv'),
 
     # auth mechanism agnostic login
-    url(r'^login$', browser_views.login, name='login'),
+    re_path(r'^login$', browser_views.login, name='login'),
 ]
 
 if settings.BHR.get('unauthenticated_limited_query', False):
     urlpatterns.extend([
-        url(r'^publist.csv', views.bhlistpub, name='pubcsv'),
+        re_path(r'^publist.csv', views.bhlistpub, name='pubcsv'),
 
-        url(r'^api/query_limited/(?P<cidr>.+)', views.BlockHistoryLimited.as_view()),
-        url('^limited/query$', browser_views.QueryViewLimited.as_view(), name="query_limited"),
-        url('^limited/list$', browser_views.ListViewLimited.as_view(), name="list_limited"),
+        re_path(r'^api/query_limited/(?P<cidr>.+)', views.BlockHistoryLimited.as_view()),
+        re_path('^limited/query$', browser_views.QueryViewLimited.as_view(), name="query_limited"),
+        re_path('^limited/list$', browser_views.ListViewLimited.as_view(), name="list_limited"),
     ])
 else:
     urlpatterns.extend([
-        url(r'^publist.csv', login_required(views.bhlistpub), name='pubcsv'),
+        re_path(r'^publist.csv', login_required(views.bhlistpub), name='pubcsv'),
     ])
